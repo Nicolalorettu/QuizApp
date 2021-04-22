@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="UsersModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Quiz">
+    <Key>
+      <PropertyRef Name="QuizId" />
+    </Key>
+    <Property Name="QuizId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="QuizName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="QuizDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="QuizQuestionsNumber" Type="Int32" Nullable="false" />
+    <Property Name="TimedQuiz" Type="Boolean" Nullable="false" />
+    <Property Name="MaxTimeQuiz" Type="Int32" Nullable="false" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="QuizQuestions" Relationship="Self.FK_QuestionQuiz" FromRole="Quiz" ToRole="QuizQuestions" />
+    <NavigationProperty Name="Users" Relationship="Self.FK_UserQuizId" FromRole="Quiz" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="QuizQuestions">
+    <Key>
+      <PropertyRef Name="QuestionId" />
+    </Key>
+    <Property Name="QuestionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Question" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="TypeQuestion" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="QuizId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Quiz" Relationship="Self.FK_QuestionQuiz" FromRole="QuizQuestions" ToRole="Quiz" />
+    <NavigationProperty Name="Responses" Relationship="Self.FK_ResponseQuestion" FromRole="QuizQuestions" ToRole="Responses" />
+  </EntityType>
+  <EntityType Name="Responses">
+    <Key>
+      <PropertyRef Name="ResponseId" />
+    </Key>
+    <Property Name="ResponseId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="QuizResponse" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="QuestionId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="QuizQuestions" Relationship="Self.FK_ResponseQuestion" FromRole="Responses" ToRole="QuizQuestions" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="EmailID" Type="String" MaxLength="254" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="DateOfBirth" Type="DateTime" Precision="3" />
+    <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="IsEmailVerified" Type="Boolean" Nullable="false" />
+    <Property Name="ActivationCode" Type="Guid" Nullable="false" />
+    <Property Name="IsAdminSurvey" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Quiz" Relationship="Self.FK_UserQuizId" FromRole="Users" ToRole="Quiz" />
+  </EntityType>
+  <Association Name="FK_QuestionQuiz">
+    <End Role="Quiz" Type="Self.Quiz" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="QuizQuestions" Type="Self.QuizQuestions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Quiz">
+        <PropertyRef Name="QuizId" />
+      </Principal>
+      <Dependent Role="QuizQuestions">
+        <PropertyRef Name="QuizId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserQuizId">
+    <End Role="Users" Type="Self.Users" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Quiz" Type="Self.Quiz" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Quiz">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ResponseQuestion">
+    <End Role="QuizQuestions" Type="Self.QuizQuestions" Multiplicity="1" />
+    <End Role="Responses" Type="Self.Responses" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="QuizQuestions">
+        <PropertyRef Name="QuestionId" />
+      </Principal>
+      <Dependent Role="Responses">
+        <PropertyRef Name="QuestionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="UsersEntities1" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Quiz" EntityType="Self.Quiz" />
+    <EntitySet Name="QuizQuestions" EntityType="Self.QuizQuestions" />
+    <EntitySet Name="Responses" EntityType="Self.Responses" />
+    <EntitySet Name="Users" EntityType="Self.Users" />
+    <AssociationSet Name="FK_QuestionQuiz" Association="Self.FK_QuestionQuiz">
+      <End Role="Quiz" EntitySet="Quiz" />
+      <End Role="QuizQuestions" EntitySet="QuizQuestions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserQuizId" Association="Self.FK_UserQuizId">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Quiz" EntitySet="Quiz" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ResponseQuestion" Association="Self.FK_ResponseQuestion">
+      <End Role="QuizQuestions" EntitySet="QuizQuestions" />
+      <End Role="Responses" EntitySet="Responses" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

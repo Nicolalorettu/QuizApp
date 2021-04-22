@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "Admin";
+}
+
+@section NavBar {
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Survey Application", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">@ViewBag.Message</a></li>
+                <li><a href="@Url.Action("Registration", "User")">Registrazione Utente</a></li>
+                <li><a href="#">Inserimento Questionari</a></li>
+                <li><a href="@Url.Action("Logout", "User")">Logout</a></li>
+            </ul>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                </ul>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+
+
+
+
+
+
+
